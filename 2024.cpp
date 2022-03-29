@@ -18,32 +18,26 @@ using namespace std;
 class Solution {
 public:
     int maxConsecutiveAnswers(string answerKey, int k) {
-        int len = answerKey.size();
-        int sum_t = 0, sum_f = 0; // 记录t,f的总数
-        int left_t = 0, left_f = 0,sum_max = 0; // 遍历过程中 t数列 和 f数列的左边界
-        for(int i = 0; i < len;i++){
-            if(answerKey[i] == 'T')
-                sum_t++;
-            else sum_f++;
-            while(sum_f > k){
-                if(answerKey[left_t] == 'F')
-                    sum_f--;
-                left_t++;
+        int n = answerKey.size();
+        int cntT = 0, cntF = 0, ans = 0;
+        for (int left = 0, right = 0; right < n; ++right) {
+            if(answerKey[right] == 'T') cntT++;
+            else cntF++;
+            if (cntT > k && cntF > k) {
+                if (answerKey[left] == 'T') cntT--;
+                else cntF--;
+                ++left;
             }
-            while(sum_t > k){
-                if(answerKey[left_f] == 'T')
-                    sum_t--;
-                left_f++;
-            }
-            sum_max = max(sum_max,max(i-left_t,i-left_f)+1);
+            ans = max(ans, right - left + 1);
         }
-        return sum_max;
+        return ans;
     }
 };
+
 
 
 int main(){
     Solution s;
     string str = "TFFT";
-    cout<<s.maxConsecutiveAnswers(str,2)<<endl;
+    cout<<s.maxConsecutiveAnswers(str,1)<<endl;
 }
